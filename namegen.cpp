@@ -61,13 +61,28 @@ Chance chances2[256][256][256]; // chance of each char given previous 2: [pos-2]
 
 int main(int argc, char** argv)
 {
+	int namesPerBatch = 10;
+	bool autoQuit = false;
+	for (int iArg = 1; iArg < argc; iArg++)
+	{
+		if (!strcmp(argv[iArg], "-n") && (argc - 1 > iArg))
+		{
+			iArg++;
+			namesPerBatch = atoi(argv[iArg]);
+		}
+		if (!strcmp(argv[iArg], "-q"))
+		{
+			autoQuit = true;
+		}
+	}
+
 	memset(nextOccur, 0, 0x10000 * sizeof(int));
 	memset(chances, 0, 0x10000 * sizeof(Chance));
 	memset(ended, 0, 0x100 * sizeof(Ended));
 	memset(chances2, 0, 0x1000000 * sizeof(Chance));
 	memset(next2, 0, 0x1000000 * sizeof(int));
 
-	cout << "Analyzing dictionary...\n\n";
+	if (!autoQuit) { cout << "Analyzing dictionary...\n\n"; }
 
 	ifstream dic;
 	
@@ -136,13 +151,13 @@ int main(int argc, char** argv)
 	auto now = time(nullptr);
 	srand((unsigned int)now);
 	int key;
-	cout << "Press space to generate more, or q to quit.\n\n";
+	if (!autoQuit) { cout << "Press space to generate more, or q to quit.\n\n"; }
 	PRNG rng;
 
 	string name{""};
 	do
 	{
-		for (int x = 0; x < 10; x++)
+		for (int x = 0; x < namesPerBatch; x++)
 		{
 			char c, prev1, prev2;
 			name.clear();
@@ -180,7 +195,10 @@ int main(int argc, char** argv)
 		}
 		cout << endl;
 		cout.flush();
-		key = _getch();
+		if (!autoQuit)
+		{
+			key = _getch();
+		}
 		
-	} while (key != 'q');
+	} while ((!autoQuit) && (key != 'q'));
 }
