@@ -32,7 +32,8 @@
 #include <cmath>
 #include <cassert>
 #include <limits>
-#include <intrin.h>
+//#include <intrin.h>
+#include <immintrin.h>
 
 class PRNG
 {

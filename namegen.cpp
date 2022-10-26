@@ -10,12 +10,14 @@
 #include <fstream>
 #include <time.h>
 #include <string>
-#include <conio.h>
 #include <filesystem>
 #include "PRNG.h"
+#include <string.h>
+#include <memory.h>
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <conio.h>
 #endif
 
 using namespace std;
@@ -86,11 +88,13 @@ int main(int argc, char** argv)
 
 	ifstream dic;
 	
-	wchar_t moduleFileName[256];
 	#if defined(_WIN32)
+		wchar_t moduleFileName[256];
 		GetModuleFileNameW(NULL, moduleFileName, sizeof(moduleFileName) / 2);
 	#else
 		// TODO: readlink("/proc/self/exe" ...
+		//strcpy(moduleFileName, argv[0]);
+		char moduleFileName[256];
 		strcpy(argv[0], moduleFileName);
 	#endif
 
@@ -197,7 +201,8 @@ int main(int argc, char** argv)
 		cout.flush();
 		if (!autoQuit)
 		{
-			key = _getch();
+			//key = _getch();
+			key = getc(stdin);
 		}
 		
 	} while ((!autoQuit) && (key != 'q'));
